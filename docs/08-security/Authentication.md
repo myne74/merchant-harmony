@@ -5,200 +5,127 @@
 | Version | 1.0 |
 | Status | Active |
 | Owner | Project Lead (Raveendra Myneni) |
-| Last Updated | 2026-06-27 |
+| Last Updated | 2026-06-28 |
 
 ---
 
-## Purpose
+# Purpose
 
-This document defines the authentication and authorization model for Merchant Harmony.
+This document describes the authentication architecture for Merchant Harmony.
 
-It explains how users authenticate, how JWT tokens are used, and how access is controlled across services.
-
----
-
-## Authentication Approach
-
-Merchant Harmony uses SMS OTP authentication for both merchants and customers.
-
-After successful OTP verification, the system issues a JWT token. The client uses this token for all secured API requests.
+Authentication verifies identity. Authorization determines what an authenticated user is allowed to access.
 
 ---
 
-## User Roles
+# Authentication Overview
 
-Supported roles:
+Merchant Harmony supports two user types:
 
-- MERCHANT
-- CUSTOMER
+- Merchant
+- Customer
 
-Each authenticated user is associated with exactly one role for the current product.
+Each uses an independent authentication flow based on SMS One-Time Password (OTP).
+
+Passwords are not used in the MVP.
 
 ---
 
-## Login Flow
+# Authentication Flow
 
 ```text
 User enters phone number
-        ↓
-Auth Service sends OTP
-        ↓
-User submits OTP
-        ↓
-Auth Service verifies OTP
-        ↓
-JWT is generated
-        ↓
-Client uses JWT for secured APIs
+        │
+        ▼
+Generate OTP
+        │
+        ▼
+Verify OTP
+        │
+        ▼
+Issue JWT
+        │
+        ▼
+Access secured APIs
 ```
 
 ---
 
-## JWT Usage
+# Merchant Authentication
 
-Secured APIs require the following header:
+Endpoints
 
-```http
-Authorization: Bearer <jwt>
+```text
+POST /api/v1/auth/merchants/register
+POST /api/v1/auth/merchants/login
+POST /api/v1/auth/merchants/verify-otp
 ```
 
-The JWT should contain enough information to identify the authenticated user and role.
+Business Rules
 
-Recommended claims:
-
-| Claim | Purpose |
-|------|---------|
-| sub | User identifier |
-| role | MERCHANT or CUSTOMER |
-| exp | Token expiration |
-| iat | Issued time |
+- Phone number must be unique within merchants.
+- Merchant registration generates a permanent Merchant QR Code.
+- JWT contains Merchant identity and role.
 
 ---
 
-## Public APIs
+# Customer Authentication
 
-The following APIs are public:
+Endpoints
 
-- Merchant registration
-- Customer registration
-- Send OTP
-- Verify OTP
+```text
+POST /api/v1/auth/customers/register
+POST /api/v1/auth/customers/login
+POST /api/v1/auth/customers/verify-otp
+```
 
-Public APIs do not require JWT.
+Business Rules
 
----
-
-## Secured APIs
-
-The following areas require JWT:
-
-- Merchant profile
-- Customer profile
-- Merchant-Customer association
-- Feedback threads
-- Comments
-- Merchant feedback management
-
-Each secured API must validate both authentication and ownership.
+- Phone number must be unique within customers.
+- Customer QR Code is not part of the MVP.
+- JWT contains Customer identity and role.
 
 ---
 
-## Authorization Rules
+# JWT
 
-### Merchant
+Typical claims:
 
-A merchant can:
+```text
+sub        User ID
+role       MERCHANT | CUSTOMER
+userType   MERCHANT | CUSTOMER
+iat        Issued At
+exp        Expiration
+```
 
-- Access own profile
-- View own associated customers
-- View own feedback threads
-- Reply to own feedback threads
-- Close own feedback threads
-
-A merchant cannot:
-
-- Access another merchant's data
-- Access unrelated customer feedback
-- Create feedback as a customer
-
-### Customer
-
-A customer can:
-
-- Access own profile
-- Associate with merchants
-- View own associated merchants
-- Create feedback for associated merchants
-- Comment on own feedback threads
-
-A customer cannot:
-
-- Access another customer's data
-- Access merchant-only APIs
-- Close feedback threads
+Business data is never embedded inside the token.
 
 ---
 
-## Auth Service Responsibilities
+# Security Principles
 
-The auth-service owns:
-
-- OTP generation
-- OTP validation
-- JWT generation
-- Authentication APIs
-- Authentication-related validation
-
-The auth-service does not own merchant feedback, customer associations, or feedback threads.
+- HTTPS required
+- Short-lived OTPs
+- Short-lived JWTs
+- JWT validated on every secured request
+- Ownership validation after authentication
+- Stateless authentication
 
 ---
 
-## Engagement Service Responsibilities
+# Future Enhancements
 
-The engagement-service validates JWT claims and enforces authorization rules for business operations.
-
-It owns:
-
-- Merchant profile access
-- Customer profile access
-- Associations
-- Feedback threads
-- Comments
-- Ownership checks
+- Refresh Tokens
+- Token Revocation
+- MFA
+- OAuth2 / Social Login
+- Passkeys
 
 ---
 
-## Security Principles
+# Related Documents
 
-- Never trust client-provided user IDs when JWT is available.
-- Resolve user identity from JWT claims.
-- Enforce role checks at API boundaries.
-- Enforce ownership checks in service logic.
-- Do not log OTP values or sensitive tokens.
-- Treat phone numbers as sensitive data.
-- Keep authentication stateless after JWT issuance.
-
----
-
-## Future Enhancements
-
-Future authentication capabilities may include:
-
-- Refresh tokens
-- Email/password login
-- Google login
-- Apple login
-- Multi-factor authentication
-- Session revocation
-- Device trust
-
----
-
-## Related Documents
-
-- ProductRequirements.md
-- BusinessRules.md
-- Architecture.md
+- Authorization.md
 - ApiSpecification.md
-- DataModel.md
-- DecisionLog.md
+- BusinessRules.md
+- ADR-002-Authentication.md
