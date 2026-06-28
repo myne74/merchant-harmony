@@ -1,0 +1,41 @@
+services:
+
+  auth-db:
+    image: postgres:17
+    container_name: merchant-harmony-auth-db
+    environment:
+      POSTGRES_DB: auth_db
+      POSTGRES_USER: merchantharmony
+      POSTGRES_PASSWORD: merchantharmony
+    ports:
+      - "5433:5432"
+    volumes:
+      - auth-db-data:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U merchantharmony -d auth_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  engagement-db:
+    image: postgres:17
+    container_name: merchant-harmony-engagement-db
+    environment:
+      POSTGRES_DB: engagement_db
+      POSTGRES_USER: merchantharmony
+      POSTGRES_PASSWORD: merchantharmony
+    ports:
+      - "5434:5432"
+    volumes:
+      - engagement-db-data:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U merchantharmony -d engagement_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  auth-db-data:
+  engagement-db-data:
