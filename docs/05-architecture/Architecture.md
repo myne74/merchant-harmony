@@ -53,8 +53,8 @@ Responsibilities:
 
 ## Technology Stack
 
-- Java 17
-- Spring Boot
+- Java 21
+- Spring Boot 4.1
 - Spring Security
 - Spring Data JPA
 - PostgreSQL

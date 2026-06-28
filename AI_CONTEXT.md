@@ -75,8 +75,8 @@ Future capabilities are maintained in **FutureRequirements.md**.
 ## Technology Stack
 
 Backend
-- Java 17
-- Spring Boot
+- Java 21
+- Spring Boot 4.1
 - Spring Security
 - Spring Data JPA
 
