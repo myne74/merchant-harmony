@@ -69,6 +69,7 @@ The following Phase 1 items are complete:
 - engagement-service module scaffold
 - Dependency stack configured (web, JPA, security, validation, actuator, PostgreSQL, JJWT)
 - Port assignments: auth-service 8081, engagement-service 8082
+- Docker Compose with PostgreSQL for auth-db (5433) and engagement-db (5434)
 
 ---
 
@@ -76,7 +77,6 @@ The following Phase 1 items are complete:
 
 The current objectives are:
 
-- Docker Compose with two PostgreSQL databases
 - Global exception handling
 - JWT infrastructure
 - Flyway migrations + initial schema

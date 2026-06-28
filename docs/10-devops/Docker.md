@@ -2,8 +2,8 @@
 
 | Property | Value |
 |----------|-------|
-| Version | 1.0 |
-| Status | Draft |
+| Version | 1.1 |
+| Status | Active |
 | Owner | Project Lead (Raveendra Myneni) |
 | Last Updated | 2026-06-28 |
 
@@ -17,12 +17,16 @@ This document defines the Docker approach for local development of Merchant Harm
 
 ## Local Development Containers
 
-The MVP should support local execution with Docker Compose.
+Docker Compose manages infrastructure containers for local development.
+Services (auth-service, engagement-service) run from the IDE or Maven during development.
 
-Initial containers:
+Current containers:
 
-- PostgreSQL for auth-service
-- PostgreSQL for engagement-service
+- PostgreSQL for auth-service (auth-db)
+- PostgreSQL for engagement-service (engagement-db)
+
+Future containers (when Dockerfiles are added):
+
 - auth-service
 - engagement-service
 
@@ -39,25 +43,47 @@ Initial containers:
 
 ---
 
-## Docker Compose Goals
+## Docker Compose Location
 
-Docker Compose should allow a developer to start the local environment using:
+```text
+docker/docker-compose.yml
+```
+
+## Running Locally
+
+Start all infrastructure containers:
 
 ```bash
-docker compose up
+cd docker && docker compose up -d
+```
+
+Stop all containers:
+
+```bash
+cd docker && docker compose down
+```
+
+Stop and remove volumes (wipes database data):
+
+```bash
+cd docker && docker compose down -v
 ```
 
 ---
 
 ## Environment Configuration
 
-Each service should support local configuration through:
+Service configuration uses environment variable substitution in `application.properties`:
 
-- application-local.yml
-- environment variables
-- Docker Compose variables
+```properties
+spring.datasource.url=${DB_URL:jdbc:postgresql://localhost:5433/auth_db}
+spring.datasource.username=${DB_USERNAME:merchantharmony}
+spring.datasource.password=${DB_PASSWORD:merchantharmony}
+```
 
-Secrets should not be committed.
+The default values work for local development. Override via environment variables for containerised or production deployments.
+
+Secrets must not be committed.
 
 ---
 
