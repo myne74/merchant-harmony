@@ -2,7 +2,7 @@
 
 | Property | Value |
 |----------|-------|
-| Version | 2.1 |
+| Version | 2.3 |
 | Status | Active |
 | Owner | Project Lead (Raveendra Myneni) |
 | Last Updated | 2026-06-27 |
@@ -21,7 +21,7 @@ This document defines the core business entities for Merchant Harmony. It serves
 
 Represents a single physical business location registered within Merchant Harmony.
 
-A merchant owns customer associations, feedback threads, and conversations. Each merchant is uniquely identified by a permanent Merchant QR Code.
+A merchant owns customer associations, feedback threads, conversations, and enabled feedback topics. Each merchant is uniquely identified by a permanent Merchant QR Code.
 
 ### Identity
 
@@ -70,23 +70,10 @@ A merchant owns customer associations, feedback threads, and conversations. Each
 Merchant
 │
 ├── MerchantCustomer (1:N)
+├── MerchantTopic (1:N)
 ├── FeedbackThread (1:N)
 └── Customer (N:N via MerchantCustomer)
 ```
-
-### Future Expansion
-
-- logoUrl
-- businessDescription
-- businessHours
-- supportEmail
-- supportPhone
-- socialMediaLinks
-- timezone
-- preferredLanguage
-- brandingTheme
-- notificationPreferences
-- customFeedbackCategories
 
 ---
 
@@ -125,13 +112,6 @@ Customer
 └── Merchant (N:N via MerchantCustomer)
 ```
 
-### Future Expansion
-
-- profilePhoto
-- preferredLanguage
-- notificationPreferences
-- marketingConsent
-
 ---
 
 # MerchantCustomer
@@ -149,9 +129,9 @@ Represents the permanent association between a merchant and a customer.
 
 ### Business Rules
 
-- Association is created by customer QR scan.
+- Association is created when a customer scans a Merchant QR Code through Merchant Landing.
 - Duplicate associations are not allowed.
-- Association remains permanent for the MVP.
+- Association remains permanent for the current product.
 
 ### Related Entities
 
@@ -163,11 +143,102 @@ MerchantCustomer
 
 ---
 
+# FeedbackTopicMaster
+
+## Description
+
+Represents centrally managed feedback topics by merchant category.
+
+Feedback Topic Master avoids redundant merchant-created topics and allows merchants to be operational immediately after registration.
+
+### Attributes
+
+| Field | Notes |
+|------|-------|
+| topicId | UUID |
+| merchantCategory | RESTAURANT, GROCERY, SALON, RETAIL, OTHER |
+| name | Topic display name |
+| type | Topic classification |
+| displayOrder | Display order within category |
+| active | Whether topic is currently available as master data |
+| createdAt | Audit |
+| updatedAt | Audit |
+
+### Business Rules
+
+- Active master topics are used to initialize merchant topics during merchant registration.
+- `displayOrder` controls how topics appear in Merchant Landing.
+- `defaultEnabled` is not required because all active master topics for a merchant category are enabled during registration.
+
+### Example Topics
+
+```text
+RESTAURANT
+1 Food
+2 Service
+3 Billing
+4 Cleanliness
+5 General
+
+SALON
+1 Haircut
+2 Staff
+3 Appointment
+4 Billing
+5 General
+```
+
+### Related Entities
+
+```text
+FeedbackTopicMaster
+└── MerchantTopic (1:N)
+```
+
+---
+
+# MerchantTopic
+
+## Description
+
+Represents the feedback topics enabled for a specific merchant.
+
+Merchant topics are created from active Feedback Topic Master records during merchant registration.
+
+### Attributes
+
+| Field | Notes |
+|------|-------|
+| merchantTopicId | UUID |
+| merchantId | FK |
+| topicId | FK to FeedbackTopicMaster |
+| active | Whether customers can select this topic |
+| createdAt | Audit |
+| updatedAt | Audit |
+
+### Business Rules
+
+- Merchant topics are initialized from active master topics for the merchant category.
+- Merchants may enable or disable their topics.
+- A merchant must always have at least one active feedback topic.
+- Every feedback thread must reference exactly one active merchant topic.
+
+### Related Entities
+
+```text
+MerchantTopic
+├── Merchant (N:1)
+├── FeedbackTopicMaster (N:1)
+└── FeedbackThread (1:N)
+```
+
+---
+
 # FeedbackThread
 
 ## Description
 
-Represents a conversation initiated by a customer for a specific merchant.
+Represents a conversation initiated by a customer for a specific merchant topic.
 
 ### Attributes
 
@@ -176,13 +247,16 @@ Represents a conversation initiated by a customer for a specific merchant.
 | threadId | UUID |
 | merchantId | FK |
 | customerId | FK |
-| category | Feedback category |
+| merchantTopicId | FK |
 | status | OPEN / CLOSED |
 | createdAt | Audit |
 | closedAt | Nullable |
 
 ### Business Rules
 
+- Every feedback thread belongs to exactly one merchant.
+- Every feedback thread belongs to exactly one customer.
+- Every feedback thread references exactly one active merchant topic.
 - Multiple threads per merchant/customer are allowed.
 - Only merchants can close a thread.
 - Closed threads become read-only.
@@ -193,16 +267,9 @@ Represents a conversation initiated by a customer for a specific merchant.
 FeedbackThread
 ├── Merchant (N:1)
 ├── Customer (N:1)
+├── MerchantTopic (N:1)
 └── Comment (1:N)
 ```
-
-### Future Expansion
-
-- priority
-- sentiment
-- assignedTo
-- tags
-- resolutionSummary
 
 ---
 
@@ -239,13 +306,13 @@ Comment
 ## Overall Relationship View
 
 ```text
-Merchant
-│
-├── MerchantCustomer ───── Customer
-│
-└── FeedbackThread
-         │
-         └── Comment
+FeedbackTopicMaster
+        │
+        └── MerchantTopic
+                  │
+Merchant ─────────┼──────── FeedbackThread ───── Comment
+   │              │                │
+   └── MerchantCustomer ─────── Customer
 ```
 
 ---
@@ -257,6 +324,7 @@ Merchant
 - Foreign key integrity
 - Normalized schema
 - Database per service
+- Master data avoids redundant merchant setup
 - Incremental evolution without breaking compatibility
 
 ---
