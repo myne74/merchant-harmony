@@ -5,7 +5,7 @@
 | Version | 1.0 |
 | Status | Active |
 | Owner | Project Lead (Raveendra Myneni) |
-| Last Updated | 2026-06-27 |
+| Last Updated | 2026-06-28 |
 
 ---
 
@@ -22,10 +22,10 @@ This document should be updated at the end of each major milestone or developmen
 ## Current Phase
 
 ```text
-Phase 0 – Engineering Foundation
+Phase 1 – Foundation Implementation
 ```
 
-The current focus is establishing a solid engineering foundation before active feature development begins.
+Active implementation has begun. Engineering foundation is complete.
 
 ---
 
@@ -62,37 +62,40 @@ The following engineering artifacts have been completed or drafted:
 - Engineering naming conventions
 - Repository organization
 
+The following Phase 1 items are complete:
+
+- Maven multi-module parent (Spring Boot 4.1, Java 21)
+- auth-service module scaffold
+- engagement-service module scaffold
+- Dependency stack configured (web, JPA, security, validation, actuator, PostgreSQL, JJWT)
+- Port assignments: auth-service 8081, engagement-service 8082
+
 ---
 
 ## Current Focus
 
 The current objectives are:
 
-- Finalize core engineering documentation
-- Prepare the repository for implementation
-- Freeze documentation restructuring
-- Begin Sprint 1 implementation
+- Docker Compose with two PostgreSQL databases
+- Global exception handling
+- JWT infrastructure
+- Flyway migrations + initial schema
 
 ---
 
 ## Next Milestone
 
 ```text
-Phase 1 – Foundation Implementation
+Phase 2 – Auth Service Implementation
 ```
 
 Planned work:
 
-- Parent Maven project
-- auth-service foundation
-- engagement-service foundation
-- Spring Boot configuration
-- PostgreSQL integration
-- Docker Compose
-- Global exception handling
-- Validation framework
-- Health endpoints
-- JWT infrastructure
+- Merchant registration
+- Customer registration
+- SMS OTP flow
+- JWT issue and validation
+- Auth service integration tests
 
 ---
 

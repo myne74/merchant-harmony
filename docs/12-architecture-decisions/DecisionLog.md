@@ -5,7 +5,7 @@
 | Version | 1.0 |
 | Status | Active |
 | Owner | Project Lead (Raveendra Myneni) |
-| Last Updated | 2026-06-27 |
+| Last Updated | 2026-06-28 |
 
 ---
 
@@ -46,6 +46,7 @@ Architectural decisions are evaluated using the following priorities:
 | 2026-06-27 | ADR-010 | Merchant and Customer may share the same phone number | Accepted |
 | 2026-06-27 | ADR-011 | Separate Merchant and Customer registration/login APIs | Accepted |
 | 2026-06-27 | ADR-012 | Database-per-service architecture | Accepted |
+| 2026-06-28 | ADR-013 | Adopt Spring Boot 4.1 with Java 21 | Accepted |
 
 ---
 
