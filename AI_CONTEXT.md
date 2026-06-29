@@ -102,12 +102,16 @@ Development
 ```
 merchant-harmony/
 │
+├── pom.xml
+├── README.md
 ├── AI_CONTEXT.md
 ├── PROJECT_STATE.md
-├── README.md
-├── docs/
+│
 ├── auth-service/
 ├── engagement-service/
+├── common/
+│
+├── docs/
 ├── docker/
 └── scripts/
 ```

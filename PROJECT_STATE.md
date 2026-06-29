@@ -70,6 +70,8 @@ The following Phase 1 items are complete:
 - Dependency stack configured (web, JPA, security, validation, actuator, PostgreSQL, JJWT)
 - Port assignments: auth-service 8081, engagement-service 8082
 - Docker Compose with PostgreSQL for auth-db (5433) and engagement-db (5434)
+- common module (shared library jar)
+- Global exception handling in common (ErrorCode, ErrorResponse, MerchantHarmonyException, GlobalExceptionHandler)
 
 ---
 
@@ -77,7 +79,6 @@ The following Phase 1 items are complete:
 
 The current objectives are:
 
-- Global exception handling
 - JWT infrastructure
 - Flyway migrations + initial schema
 

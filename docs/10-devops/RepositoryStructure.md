@@ -111,18 +111,26 @@ com.merchantharmony.engagement
 
 ### common
 
-Shared modules used across services.
+Shared library consumed by all services as a Maven jar dependency.
 
-Initial recommendation:
+Current contents:
 
 ```text
-common/
-├── common-api/
-├── common-security/
-└── common-test/
+com.merchantharmony.common.exception/
+├── ErrorCode.java
+├── ErrorResponse.java
+├── MerchantHarmonyException.java
+└── GlobalExceptionHandler.java
 ```
 
-Use common modules only when duplication appears. Do not overuse shared libraries early.
+Future contents (as shared needs grow):
+
+```text
+com.merchantharmony.common.security/
+com.merchantharmony.common.util/
+```
+
+Note: `common` has no `spring-boot-maven-plugin`. It is a plain jar, not a runnable application.
 
 ---
 
