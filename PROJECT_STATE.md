@@ -72,6 +72,9 @@ The following Phase 1 items are complete:
 - Docker Compose with PostgreSQL for auth-db (5433) and engagement-db (5434)
 - common module (shared library jar)
 - Global exception handling in common (ErrorCode, ErrorResponse, MerchantHarmonyException, GlobalExceptionHandler)
+- JWT infrastructure in common (UserRole, UserPrincipal, JwtProperties, JwtService, JwtAuthenticationFilter, JwtAuthenticationEntryPoint, JwtAccessDeniedHandler)
+- SecurityConfig in auth-service (public auth endpoints, stateless JWT)
+- SecurityConfig in engagement-service (all endpoints require authentication)
 
 ---
 
@@ -79,7 +82,6 @@ The following Phase 1 items are complete:
 
 The current objectives are:
 
-- JWT infrastructure
 - Flyway migrations + initial schema
 
 ---
