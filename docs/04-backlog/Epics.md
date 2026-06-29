@@ -5,7 +5,7 @@
 | Version | 1.0 |
 | Status | Active |
 | Owner | Project Lead (Raveendra Myneni) |
-| Last Updated | 2026-06-28 |
+| Last Updated | 2026-06-29 |
 
 ---
 
@@ -19,12 +19,13 @@ Epics represent the major capability areas of the Merchant Harmony MVP. Each epi
 
 | ID | Epic | Service | Status |
 |----|------|---------|--------|
-| E-001 | Merchant Authentication | auth-service | Pending |
-| E-002 | Customer Authentication | auth-service | Pending |
-| E-003 | Merchant Profile & Topic Management | engagement-service | Pending |
-| E-004 | Customer Profile & Merchant Discovery | engagement-service | Pending |
-| E-005 | Feedback Threads & Conversations | engagement-service | Pending |
-| E-006 | Internal Service Communication | auth-service + engagement-service | Pending |
+| E-001 | Merchant Authentication | auth-service | Done |
+| E-002 | Customer Authentication | auth-service | Done |
+| E-003 | Merchant Profile & Topic Management | engagement-service | Done |
+| E-004 | Customer Profile & Merchant Discovery | engagement-service | Done |
+| E-005 | Feedback Threads & Conversations | engagement-service | Done |
+| E-006 | Internal Service Communication | auth-service + engagement-service | Done |
+| E-007 | Notification Service — SMS OTP Delivery | notification-service | Pending |
 
 ---
 
@@ -142,6 +143,29 @@ Epics represent the major capability areas of the Merchant Harmony MVP. Each epi
 - Topic initialization call at merchant registration (auth-service → engagement-service)
 
 **Done when:** Merchant Landing correctly returns merchant profile data (businessName, displayName, category) by fetching from auth-service. Merchant topics are initialized in engagement-service automatically when a merchant registers in auth-service.
+
+---
+
+## E-007 — Notification Service — SMS OTP Delivery
+
+**Goal:** OTP messages are delivered via a dedicated notification-service with a swappable provider interface, isolating delivery concerns from auth-service.
+
+**Scope (MVP):**
+- notification-service Maven module (port 8083)
+- `SmsProvider` interface — single extension point for all SMS implementations
+- `LoggingSmsProvider` — logs OTP, simulates 10% random failure via SecureRandom
+- Internal REST endpoint: `POST /api/v1/notifications/sms` (no JWT — trusted internal network)
+- `NotificationServiceClient` in auth-service (RestClient)
+- Wire OTP send in auth-service through notification-service (replaces direct WARN log in OtpService)
+- auth-service propagates notification failure to caller — failed OTP send = failed login attempt
+
+**Out of scope for MVP:**
+- Real SMS providers (Twilio, AWS SNS, etc.)
+- Email, Slack, or push channels
+- Notification history / persistence
+- Kafka event-driven delivery (documented migration path in ADR-007)
+
+**Done when:** A merchant or customer login attempt triggers a call to notification-service; the OTP is logged by `LoggingSmsProvider`; 10% of calls return a failure that propagates back to the login caller as an error.
 
 ---
 
