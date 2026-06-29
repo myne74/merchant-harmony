@@ -77,12 +77,16 @@ The following Phase 1 items are complete:
 - SecurityConfig in engagement-service (all endpoints require authentication)
 - Flyway migrations for auth_db (merchant, customer, otp_request)
 - Flyway migrations for engagement_db (feedback_topic_master, merchant_customer, merchant_topic, feedback_thread, comment + seed data)
+- Auth service implementation: Merchant entity/repo/service/controller, Customer entity/repo/service/controller, OTP flow (initiate + verify), JWT issuance, internal merchant profile endpoint
+- common domain enums: MerchantCategory, MerchantStatus
+- Lombok wired via annotationProcessorPaths in root pom
+- spring-boot-flyway added (Spring Boot 4.1 auto-config split)
 
 ---
 
 ## Current Focus
 
-Phase 1 is complete. Moving to Phase 2.
+Phase 2 is complete. Moving to Phase 3.
 
 ---
 

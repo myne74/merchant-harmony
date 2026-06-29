@@ -43,27 +43,27 @@ Status values: `Pending` · `In Progress` · `Done`
 
 | ID | Item | Endpoint | Status |
 |----|------|----------|--------|
-| P2-001 | Merchant entity + JPA repository | — | Pending |
-| P2-002 | POST /api/v1/auth/merchants/register | `POST /api/v1/auth/merchants/register` | Pending |
-| P2-003 | QR Code generation at merchant registration | — | Pending |
-| P2-004 | Initialize merchant topics in engagement-service at registration | Internal call | Pending |
-| P2-005 | POST /api/v1/auth/merchants/login (send OTP) | `POST /api/v1/auth/merchants/login` | Pending |
-| P2-006 | POST /api/v1/auth/merchants/verify-otp (verify + issue JWT) | `POST /api/v1/auth/merchants/verify-otp` | Pending |
+| P2-001 | Merchant entity + JPA repository | — | Done |
+| P2-002 | POST /api/v1/auth/merchants/register | `POST /api/v1/auth/merchants/register` | Done |
+| P2-003 | QR Code generation at merchant registration | — | Done |
+| P2-004 | Initialize merchant topics in engagement-service at registration | Internal call | Deferred to Phase 3 |
+| P2-005 | POST /api/v1/auth/merchants/login (send OTP) | `POST /api/v1/auth/merchants/login` | Done |
+| P2-006 | POST /api/v1/auth/merchants/verify-otp (verify + issue JWT) | `POST /api/v1/auth/merchants/verify-otp` | Done |
 
 ### E-002: Customer Authentication
 
 | ID | Item | Endpoint | Status |
 |----|------|----------|--------|
-| P2-007 | Customer entity + JPA repository | — | Pending |
-| P2-008 | POST /api/v1/auth/customers/register | `POST /api/v1/auth/customers/register` | Pending |
-| P2-009 | POST /api/v1/auth/customers/login (send OTP) | `POST /api/v1/auth/customers/login` | Pending |
-| P2-010 | POST /api/v1/auth/customers/verify-otp (verify + issue JWT) | `POST /api/v1/auth/customers/verify-otp` | Pending |
+| P2-007 | Customer entity + JPA repository | — | Done |
+| P2-008 | POST /api/v1/auth/customers/register | `POST /api/v1/auth/customers/register` | Done |
+| P2-009 | POST /api/v1/auth/customers/login (send OTP) | `POST /api/v1/auth/customers/login` | Done |
+| P2-010 | POST /api/v1/auth/customers/verify-otp (verify + issue JWT) | `POST /api/v1/auth/customers/verify-otp` | Done |
 
 ### E-006: Internal — auth-service side
 
 | ID | Item | Endpoint | Status |
 |----|------|----------|--------|
-| P2-011 | Internal merchant profile endpoint (consumed by engagement-service) | `GET /api/v1/internal/merchants/{merchantId}` | Pending |
+| P2-011 | Internal merchant profile endpoint (consumed by engagement-service) | `GET /api/v1/internal/merchants/{merchantId}` | Done |
 
 ---
 
@@ -117,9 +117,9 @@ Status values: `Pending` · `In Progress` · `Done`
 | Phase | Total | Done | Remaining |
 |-------|-------|------|-----------|
 | Phase 1 — Foundation | 13 | 13 | 0 |
-| Phase 2 — Auth Service | 11 | 0 | 11 |
+| Phase 2 — Auth Service | 11 | 10 | 1 (P2-004 deferred to Phase 3) |
 | Phase 3 — Engagement Service | 21 | 0 | 21 |
-| **Total** | **45** | **13** | **32** |
+| **Total** | **45** | **23** | **22** |
 
 ---
 

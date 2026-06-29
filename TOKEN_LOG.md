@@ -90,6 +90,41 @@ No manual data entry needed — updated by the AI assistant at the end of each s
 
 ---
 
+---
+
+### Session 003 — 2026-06-28
+
+**Phase:** Phase 2 — Auth Service Implementation
+**Type:** Business logic + entity layer
+
+**What we did:**
+- Added Lombok to auth-service pom with `annotationProcessorPaths` fix in root pom (Spring Boot 4.1 / Maven compiler plugin requires explicit processor path)
+- Added `spring-boot-flyway` to both service poms (Spring Boot 4.1 split Flyway auto-configuration into its own module)
+- Added `MerchantCategory` and `MerchantStatus` enums to common domain package
+- Built full auth-service implementation: Merchant entity/repo/service/controller, Customer entity/repo/service/controller, OTP entity/repo/service, internal merchant profile endpoint
+- Package-by-feature structure: merchant/, customer/, otp/, internal/
+- DTOs as Java records (immutable, concise, Jackson 3.x compatible)
+- `ddl-auto` upgraded from `none` to `validate` — Hibernate now validates schema on startup
+- P2-004 (topic initialization call) deferred to Phase 3 — logged as TODO
+- All tests green: 3 migrations on auth_db, 6 migrations on engagement_db
+
+**Decisions made:**
+- Package-by-feature over package-by-layer
+- Lombok for entity boilerplate; `@Data` avoided on JPA entities
+- `SecureRandom` for OTP generation (security-sensitive)
+- OTP logged at WARN for MVP dev testing — not returned in response
+- Internal endpoint protected by any valid JWT (pass-through auth for MVP)
+
+**Discoveries:**
+- Spring Boot 4.1: Lombok requires `<annotationProcessorPaths>` in maven-compiler-plugin — without it, annotated code compiles but Lombok generates nothing
+- Spring Boot 4.1: `FlywayAutoConfiguration` moved to `spring-boot-flyway` jar — Flyway on classpath is not enough
+
+**Cost signals:**
+- Medium: 3 rounds of build debugging (Lombok processor, FlywayAutoConfiguration split, Docker cleanup)
+- Low: once patterns were clear, all 24 files written without back-and-forth
+
+---
+
 ## Progress Tracker
 
 | Phase | Status | Session |
@@ -100,5 +135,5 @@ No manual data entry needed — updated by the AI assistant at the end of each s
 | Phase 1 — Global exception handling | Complete | 001 |
 | Phase 1 — JWT infrastructure | Complete | 001 |
 | Phase 1 — Flyway + DB schema | Complete | 002 |
-| Phase 2 — Auth service implementation | Pending | — |
+| Phase 2 — Auth service implementation | Complete | 003 |
 | Phase 3 — Engagement service implementation | Pending | — |
