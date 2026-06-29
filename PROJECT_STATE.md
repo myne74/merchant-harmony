@@ -75,14 +75,14 @@ The following Phase 1 items are complete:
 - JWT infrastructure in common (UserRole, UserPrincipal, JwtProperties, JwtService, JwtAuthenticationFilter, JwtAuthenticationEntryPoint, JwtAccessDeniedHandler)
 - SecurityConfig in auth-service (public auth endpoints, stateless JWT)
 - SecurityConfig in engagement-service (all endpoints require authentication)
+- Flyway migrations for auth_db (merchant, customer, otp_request)
+- Flyway migrations for engagement_db (feedback_topic_master, merchant_customer, merchant_topic, feedback_thread, comment + seed data)
 
 ---
 
 ## Current Focus
 
-The current objectives are:
-
-- Flyway migrations + initial schema
+Phase 1 is complete. Moving to Phase 2.
 
 ---
 

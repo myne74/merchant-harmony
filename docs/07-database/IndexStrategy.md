@@ -3,7 +3,7 @@
 | Property | Value |
 |----------|-------|
 | Version | 1.0 |
-| Status | Draft |
+| Status | Active |
 | Owner | Project Lead (Raveendra Myneni) |
 | Last Updated | 2026-06-28 |
 
@@ -25,59 +25,77 @@ This document defines the initial indexing strategy for Merchant Harmony MVP.
 
 ---
 
-## Recommended Indexes
+## Implemented Indexes
 
-### merchant
+### auth_db — merchant
 
-| Column | Reason |
-|--------|--------|
-| phone_number | Unique lookup for merchant authentication |
-| qr_code | Lookup from Merchant Landing |
-| category | Topic initialization and filtering |
+| Index Name | Columns | Type | Reason |
+|------------|---------|------|--------|
+| idx_merchant_phone_number | phone_number | UNIQUE | OTP login lookup |
+| idx_merchant_qr_code | qr_code | UNIQUE | Merchant Landing QR resolution |
+| idx_merchant_category | category | Standard | Topic initialization at registration |
+| idx_merchant_status | status | Standard | Active merchant filtering |
 
-### customer
+### auth_db — customer
 
-| Column | Reason |
-|--------|--------|
-| phone_number | Unique lookup for customer authentication |
+| Index Name | Columns | Type | Reason |
+|------------|---------|------|--------|
+| idx_customer_phone_number | phone_number | UNIQUE | OTP login lookup |
 
-### merchant_customer
+### auth_db — otp_request
 
-| Column | Reason |
-|--------|--------|
-| merchant_id | Find customers for merchant |
-| customer_id | Find merchants for customer |
-| merchant_id, customer_id | Prevent duplicate association |
+| Index Name | Columns | Type | Reason |
+|------------|---------|------|--------|
+| idx_otp_request_user | user_id, user_type | Standard | Fast OTP verification lookup |
+| idx_otp_request_expires_at | expires_at | Standard | Expired OTP cleanup |
 
-### feedback_topic_master
+### engagement_db — feedback_topic_master
 
-| Column | Reason |
-|--------|--------|
-| merchant_category | Load default topics |
-| merchant_category, display_order | Ordered topic display |
+| Index Name | Columns | Type | Reason |
+|------------|---------|------|--------|
+| idx_ftm_category_active | merchant_category, active | Standard | Load active topics at registration |
+| idx_ftm_display_order | merchant_category, display_order | Standard | Ordered topic display |
 
-### merchant_topic
+### engagement_db — merchant_customer
 
-| Column | Reason |
-|--------|--------|
-| merchant_id | Load merchant topics |
-| merchant_id, active | Merchant Landing |
-| topic_id | Master topic reference |
+| Index Name | Columns | Type | Reason |
+|------------|---------|------|--------|
+| idx_merchant_customer_unique | merchant_id, customer_id | UNIQUE | Prevent duplicate associations |
+| idx_merchant_customer_merchant | merchant_id | Standard | List customers for a merchant |
+| idx_merchant_customer_customer | customer_id | Standard | List merchants for a customer |
 
-### feedback_thread
+### engagement_db — merchant_topic
 
-| Column | Reason |
-|--------|--------|
-| merchant_id | Merchant feedback view |
-| customer_id | Customer feedback view |
-| merchant_topic_id | Topic reporting |
-| status | Open/closed filtering |
+| Index Name | Columns | Type | Reason |
+|------------|---------|------|--------|
+| idx_merchant_topic_merchant | merchant_id | Standard | Load all topics for a merchant |
+| idx_merchant_topic_unique | merchant_id, topic_id | UNIQUE | Prevent duplicate topic assignment |
+| idx_merchant_topic_merchant_active | merchant_id, active | Standard | Merchant Landing active topics |
 
-### comment
+### engagement_db — feedback_thread
 
-| Column | Reason |
-|--------|--------|
-| thread_id | Load thread conversation |
+| Index Name | Columns | Type | Reason |
+|------------|---------|------|--------|
+| idx_feedback_thread_merchant | merchant_id | Standard | Merchant feedback inbox |
+| idx_feedback_thread_customer | customer_id | Standard | Customer thread history |
+| idx_feedback_thread_merchant_status | merchant_id, status | Standard | Open/closed filtering for merchants |
+| idx_feedback_thread_customer_status | customer_id, status | Standard | Open/closed filtering for customers |
+
+### engagement_db — comment
+
+| Index Name | Columns | Type | Reason |
+|------------|---------|------|--------|
+| idx_comment_thread | thread_id | Standard | Load all comments for a thread |
+| idx_comment_thread_time | thread_id, created_at | Standard | Chronological message retrieval |
+
+---
+
+## Deferred Indexes
+
+| Table | Column | Reason Deferred |
+|-------|--------|-----------------|
+| merchant_topic | topic_id | Not a primary query direction in MVP — merchants query by merchant_id, not by master topic |
+| feedback_thread | merchant_topic_id | Topic-level reporting deferred to post-MVP analytics phase |
 
 ---
 

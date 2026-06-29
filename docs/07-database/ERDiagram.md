@@ -3,9 +3,10 @@
 | Property | Value |
 |----------|-------|
 | Version | 1.0 |
-| Status | Draft |
+| Status | Active |
 | Owner | Project Lead (Raveendra Myneni) |
 | Last Updated | 2026-06-28 |
+
 
 ---
 
@@ -50,9 +51,20 @@ merchant
 
 ---
 
+## Database Assignment
+
+The entities above are split across two databases:
+
+| Database | Entities |
+|----------|----------|
+| auth_db | merchant, customer, otp_request |
+| engagement_db | feedback_topic_master, merchant_customer, merchant_topic, feedback_thread, comment |
+
+Cross-database references (merchant_id, customer_id appearing in engagement_db) carry no FK constraints. Referential integrity is enforced by JWT validation and application-layer guards.
+
 ## Notes
 
-This is a logical ER view. Physical schema details will be finalized during Flyway migration implementation.
+This is a logical ER view. Physical column definitions are in DataDictionary.md. Flyway migrations are in each service's `src/main/resources/db/migration/`.
 
 ---
 

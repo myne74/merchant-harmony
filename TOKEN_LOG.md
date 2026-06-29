@@ -59,15 +59,46 @@ No manual data entry needed — updated by the AI assistant at the end of each s
 
 ---
 
+---
+
+### Session 002 — 2026-06-28
+
+**Phase:** Phase 1 (continued)
+**Type:** Infrastructure + Schema
+
+**What we did:**
+- Picked up from context compaction mid-session (Flyway was next)
+- Added `flyway-core` + `flyway-database-postgresql` to auth-service and engagement-service poms
+- Created `auth_db` migrations: V1 merchant, V2 customer, V3 otp_request
+- Created `engagement_db` migrations: V1 feedback_topic_master, V2 merchant_customer, V3 merchant_topic, V4 feedback_thread, V5 comment, V6 seed data (24 rows across 5 categories)
+- All tests passed: context load tests confirmed Flyway ran all migrations against live PostgreSQL containers
+- Filled in FlywayMigrations.md, DataDictionary.md, updated ERDiagram.md and IndexStrategy.md to Active status
+- Updated PROJECT_STATE.md and AI_CONTEXT.md to reflect Phase 1 complete
+
+**Decisions made:**
+- Merchant Landing merchant profile data fetched from auth-service via REST (GET /api/v1/internal/merchants/{merchantId}) — chosen over denormalized engagement_db copy for MVP simplicity
+- ddl-auto=none stays until JPA entities are introduced in Phase 2 (then switch to validate)
+- Cross-database FK constraints omitted by design (database-per-service); referential integrity via JWT + application layer
+- Two indexes deferred: merchant_topic.topic_id and feedback_thread.merchant_topic_id (not primary query paths in MVP)
+
+**Cost signals:**
+- Low: context compaction forced a re-read of poms and data model, but targeted reads kept overhead minimal
+- Low: no debugging loops — Flyway wired up cleanly on first compile + test run
+
+**What to do differently next time:**
+- Read poms at session start to confirm current state before editing (saves one "file not read" error)
+
+---
+
 ## Progress Tracker
 
 | Phase | Status | Session |
 |-------|--------|---------|
 | Phase 0 — Engineering Foundation | Complete | Pre-Day-1 |
 | Phase 1 — Maven multi-module setup | Complete | 001 |
-| Phase 1 — Docker Compose + PostgreSQL | Pending | — |
-| Phase 1 — Global exception handling | Pending | — |
-| Phase 1 — JWT infrastructure | Pending | — |
-| Phase 1 — Flyway + DB schema | Pending | — |
+| Phase 1 — Docker Compose + PostgreSQL | Complete | 001 |
+| Phase 1 — Global exception handling | Complete | 001 |
+| Phase 1 — JWT infrastructure | Complete | 001 |
+| Phase 1 — Flyway + DB schema | Complete | 002 |
 | Phase 2 — Auth service implementation | Pending | — |
 | Phase 3 — Engagement service implementation | Pending | — |

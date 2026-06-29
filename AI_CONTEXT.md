@@ -190,20 +190,18 @@ Documentation should evolve alongside the implementation.
 Current Phase
 
 ```
-Phase 0 – Project Foundation
+Phase 2 – Auth Service Implementation
 ```
 
 Completed
 
-- Product Requirements
-- Future Requirements
-- Initial Architecture
-- Initial API Specification
+- Phase 0: Product Requirements, Future Requirements, Initial Architecture, Initial API Specification
+- Phase 1: Maven multi-module, auth-service + engagement-service scaffolds, Docker Compose, common module, global exception handling, JWT infrastructure, Flyway migrations + initial schema for both databases
 
 Next Milestone
 
 ```
-Phase 1 – Authentication Service
+Phase 3 – Engagement Service Implementation
 ```
 
 ---
