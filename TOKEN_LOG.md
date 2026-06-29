@@ -125,6 +125,42 @@ No manual data entry needed — updated by the AI assistant at the end of each s
 
 ---
 
+---
+
+### Session 004 — 2026-06-29
+
+**Phase:** Phase 3 — Engagement Service Implementation
+**Type:** Business logic + entity layer (engagement-service)
+
+**What we did:**
+- Added Lombok + spring-boot-starter-validation to engagement-service pom
+- Upgraded engagement-service ddl-auto to validate; added open-in-view=false to both services
+- Updated engagement-service SecurityConfig: role-based path rules (MERCHANT/CUSTOMER), internal endpoints permitted without JWT
+- Built full engagement-service implementation: 5 entities, 5 repositories, 4 services, 4 controllers, 3 enums, 15+ DTOs
+- AuthServiceClient (RestClient) in engagement-service calls auth-service internal endpoints
+- EngagementServiceClient (RestClient) in auth-service wires P2-004: topic init at merchant registration
+- Added auth-service internal endpoints: GET /by-qr/{qrCode}, GET /internal/customers/{customerId}
+- Updated MerchantProfileResponse to include phoneNumber + status
+- All 21 Phase 3 backlog items implemented; BUILD SUCCESS across all 4 modules
+
+**Decisions made:**
+- RestClient (Spring 6.1+) over RestTemplate for cross-service HTTP calls (RestTemplate deprecated in Spring 7)
+- Internal topic init endpoint permitted without JWT (auth→engagement call happens before JWT exists at merchant registration)
+- Topic initialization is best-effort from auth-service: exceptions caught and logged, merchant registration never fails for topic init errors
+- `spring.jpa.open-in-view=false` on both services (explicit opt-out of OSIV; lazy loading handled by @Transactional on service methods)
+- FETCH JOIN JPQL queries on thread/topic lists to avoid N+1 (MerchantTopicRepository, FeedbackThreadRepository)
+- Merchant customer list and associated-merchant list use N calls to auth-service per item (MVP acceptable at small scale)
+- Business rule enforcement: cannot disable last active merchant topic (countByMerchantIdAndActive check)
+
+**Cost signals:**
+- Low: all files written in parallel batches without debugging loops — clean compile first try
+- Session was fast because entity schema was already locked in Flyway migrations; no design ambiguity
+
+**What to do differently next time:**
+- Consider batching auth-service calls (N calls per list item is fine at MVP scale but document the N+1 pattern as tech debt)
+
+---
+
 ## Progress Tracker
 
 | Phase | Status | Session |
@@ -136,4 +172,4 @@ No manual data entry needed — updated by the AI assistant at the end of each s
 | Phase 1 — JWT infrastructure | Complete | 001 |
 | Phase 1 — Flyway + DB schema | Complete | 002 |
 | Phase 2 — Auth service implementation | Complete | 003 |
-| Phase 3 — Engagement service implementation | Pending | — |
+| Phase 3 — Engagement service implementation | Complete | 004 |

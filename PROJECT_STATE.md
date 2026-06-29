@@ -22,10 +22,10 @@ This document should be updated at the end of each major milestone or developmen
 ## Current Phase
 
 ```text
-Phase 1 – Foundation Implementation
+Phase 3 – Engagement Service Implementation (Complete)
 ```
 
-Active implementation has begun. Engineering foundation is complete.
+MVP implementation is complete. All core endpoints implemented across both services.
 
 ---
 
@@ -81,28 +81,38 @@ The following Phase 1 items are complete:
 - common domain enums: MerchantCategory, MerchantStatus
 - Lombok wired via annotationProcessorPaths in root pom
 - spring-boot-flyway added (Spring Boot 4.1 auto-config split)
+- Phase 3 — Engagement service implementation: all 21 backlog items complete
+- FeedbackTopicMaster, MerchantTopic, MerchantCustomer, FeedbackThread, Comment entities
+- Merchant profile/topics/customers endpoints
+- Customer profile, merchant landing (QR resolve + association + topics), associated merchants endpoints
+- Full feedback thread lifecycle: create, list, read, comment, close
+- AuthServiceClient (RestClient) for cross-service calls from engagement-service
+- EngagementServiceClient in auth-service; topic init wired at merchant registration (P2-004 resolved)
+- Internal topic initialization endpoint in engagement-service (permitted without JWT)
+- Internal customer profile endpoint added to auth-service
+- Internal merchant-by-QR endpoint added to auth-service
+- Role-based path security in engagement-service SecurityConfig
+- spring.jpa.open-in-view=false on both services
 
 ---
 
 ## Current Focus
 
-Phase 2 is complete. Moving to Phase 3.
+Phase 3 complete. MVP backend is fully implemented. Next: integration testing and end-to-end verification.
 
 ---
 
 ## Next Milestone
 
 ```text
-Phase 2 – Auth Service Implementation
+MVP Verification – End-to-End Integration Test
 ```
 
 Planned work:
 
-- Merchant registration
-- Customer registration
-- SMS OTP flow
-- JWT issue and validation
-- Auth service integration tests
+- Manual end-to-end API test: register merchant → login → scan QR → create feedback thread → merchant responds → close thread
+- Review Spring Boot 4.1 open-in-view=false impact
+- Consider adding OpenAPI/Swagger documentation
 
 ---
 

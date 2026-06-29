@@ -20,12 +20,22 @@ public class InternalMerchantController {
 
     @GetMapping("/{merchantId}")
     public MerchantProfileResponse getMerchantProfile(@PathVariable UUID merchantId) {
-        Merchant merchant = merchantService.getById(merchantId);
+        return toResponse(merchantService.getById(merchantId));
+    }
+
+    @GetMapping("/by-qr/{qrCode}")
+    public MerchantProfileResponse getMerchantByQrCode(@PathVariable String qrCode) {
+        return toResponse(merchantService.getByQrCode(qrCode));
+    }
+
+    private MerchantProfileResponse toResponse(Merchant merchant) {
         return new MerchantProfileResponse(
                 merchant.getMerchantId(),
                 merchant.getBusinessName(),
                 merchant.getDisplayName(),
+                merchant.getPhoneNumber(),
                 merchant.getCategory().name(),
+                merchant.getStatus().name(),
                 merchant.getQrCode()
         );
     }

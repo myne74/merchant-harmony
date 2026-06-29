@@ -73,42 +73,42 @@ Status values: `Pending` · `In Progress` · `Done`
 
 | ID | Item | Endpoint | Status |
 |----|------|----------|--------|
-| P3-001 | Merchant topic entity + JPA repository | — | Pending |
-| P3-002 | FeedbackTopicMaster entity + JPA repository | — | Pending |
-| P3-003 | GET merchant profile | `GET /api/v1/merchants/me` | Pending |
-| P3-004 | GET merchant customers | `GET /api/v1/merchants/me/customers` | Pending |
-| P3-005 | GET master feedback topics by category | `GET /api/v1/feedback-topic-master?category=` | Pending |
-| P3-006 | GET merchant feedback topics | `GET /api/v1/merchants/me/feedback-topics` | Pending |
-| P3-007 | PATCH merchant feedback topic status (enable/disable) | `PATCH /api/v1/merchants/me/feedback-topics/{merchantTopicId}` | Pending |
+| P3-001 | Merchant topic entity + JPA repository | — | Done |
+| P3-002 | FeedbackTopicMaster entity + JPA repository | — | Done |
+| P3-003 | GET merchant profile | `GET /api/v1/merchants/me` | Done |
+| P3-004 | GET merchant customers | `GET /api/v1/merchants/me/customers` | Done |
+| P3-005 | GET master feedback topics by category | `GET /api/v1/feedback-topic-master?category=` | Done |
+| P3-006 | GET merchant feedback topics | `GET /api/v1/merchants/me/feedback-topics` | Done |
+| P3-007 | PATCH merchant feedback topic status (enable/disable) | `PATCH /api/v1/merchants/me/feedback-topics/{merchantTopicId}` | Done |
 
 ### E-004: Customer Profile & Merchant Discovery
 
 | ID | Item | Endpoint | Status |
 |----|------|----------|--------|
-| P3-008 | MerchantCustomer entity + JPA repository | — | Pending |
-| P3-009 | GET customer profile | `GET /api/v1/customers/me` | Pending |
-| P3-010 | POST merchant landing (QR resolve + association + topics) | `POST /api/v1/customers/me/merchant-landing` | Pending |
-| P3-011 | GET associated merchants for customer | `GET /api/v1/customers/me/merchants` | Pending |
+| P3-008 | MerchantCustomer entity + JPA repository | — | Done |
+| P3-009 | GET customer profile | `GET /api/v1/customers/me` | Done |
+| P3-010 | POST merchant landing (QR resolve + association + topics) | `POST /api/v1/customers/me/merchant-landing` | Done |
+| P3-011 | GET associated merchants for customer | `GET /api/v1/customers/me/merchants` | Done |
 
 ### E-005: Feedback Threads & Conversations
 
 | ID | Item | Endpoint | Status |
 |----|------|----------|--------|
-| P3-012 | FeedbackThread entity + JPA repository | — | Pending |
-| P3-013 | Comment entity + JPA repository | — | Pending |
-| P3-014 | POST create feedback thread (with first comment) | `POST /api/v1/feedback/threads` | Pending |
-| P3-015 | GET customer feedback threads | `GET /api/v1/feedback/threads/customer` | Pending |
-| P3-016 | GET merchant feedback threads | `GET /api/v1/feedback/threads/merchant` | Pending |
-| P3-017 | GET single feedback thread | `GET /api/v1/feedback/threads/{threadId}` | Pending |
-| P3-018 | POST add comment to thread | `POST /api/v1/feedback/threads/{threadId}/comments` | Pending |
-| P3-019 | PATCH close feedback thread | `PATCH /api/v1/feedback/threads/{threadId}/close` | Pending |
+| P3-012 | FeedbackThread entity + JPA repository | — | Done |
+| P3-013 | Comment entity + JPA repository | — | Done |
+| P3-014 | POST create feedback thread (with first comment) | `POST /api/v1/feedback/threads` | Done |
+| P3-015 | GET customer feedback threads | `GET /api/v1/feedback/threads/customer` | Done |
+| P3-016 | GET merchant feedback threads | `GET /api/v1/feedback/threads/merchant` | Done |
+| P3-017 | GET single feedback thread | `GET /api/v1/feedback/threads/{threadId}` | Done |
+| P3-018 | POST add comment to thread | `POST /api/v1/feedback/threads/{threadId}/comments` | Done |
+| P3-019 | PATCH close feedback thread | `PATCH /api/v1/feedback/threads/{threadId}/close` | Done |
 
 ### E-006: Internal — engagement-service side
 
 | ID | Item | Endpoint | Status |
 |----|------|----------|--------|
-| P3-020 | REST client to call auth-service internal merchant profile API | Internal call | Pending |
-| P3-021 | Topic initialization endpoint (called by auth-service at merchant registration) | Internal call | Pending |
+| P3-020 | REST client to call auth-service internal merchant profile API | Internal call | Done |
+| P3-021 | Topic initialization endpoint (called by auth-service at merchant registration) | Internal call | Done |
 
 ---
 
@@ -118,8 +118,8 @@ Status values: `Pending` · `In Progress` · `Done`
 |-------|-------|------|-----------|
 | Phase 1 — Foundation | 13 | 13 | 0 |
 | Phase 2 — Auth Service | 11 | 10 | 1 (P2-004 deferred to Phase 3) |
-| Phase 3 — Engagement Service | 21 | 0 | 21 |
-| **Total** | **45** | **23** | **22** |
+| Phase 3 — Engagement Service | 21 | 21 | 0 |
+| **Total** | **45** | **44** | **1 (P2-004 wired in Phase 3)** |
 
 ---
 

@@ -4,6 +4,21 @@ A running log of significant decisions made during implementation — the "why w
 
 ---
 
+## Phase 3 — Engagement Service Implementation (2026-06-29)
+
+| Decision | Choice Made | Why |
+|----------|-------------|-----|
+| REST client | `RestClient` (Spring 6.1+) | `RestTemplate` is deprecated in Spring 7; `RestClient` is the synchronous replacement with cleaner fluent API |
+| Internal endpoint auth | Permit `/api/v1/internal/**` without JWT in engagement-service | Topic init call from auth-service happens during merchant registration before any JWT is issued; trusted internal network for MVP |
+| Topic init error handling | Best-effort (catch + log, never fail registration) | Keeping registration atomic is better UX than cascading engagement-service failures |
+| open-in-view | `false` on both services | Explicit opt-out of Open Session In View; lazy loading handled by `@Transactional(readOnly=true)` on service methods |
+| N+1 for list-with-auth-data calls | Accepted for MVP | N calls to auth-service per item in merchant-customer list and associated-merchant list; small scale, noted as tech debt |
+| FETCH JOIN on thread/topic queries | JPQL `JOIN FETCH` in repository | Prevents N+1 when mapping thread→merchantTopic→topic in list endpoints |
+| Business rule: last active topic | `countByMerchantIdAndActive` before disabling | Spec rule: "at least one active feedback topic at all times" — checked in service before persisting the update |
+| Role-based path security | `hasRole()` rules in SecurityConfig | Enforces MERCHANT/CUSTOMER separation at the framework level, not per-endpoint logic |
+
+---
+
 ## Phase 2 — Auth Service Implementation (2026-06-28)
 
 | Decision | Choice Made | Why |

@@ -1,8 +1,8 @@
-package com.merchantharmony.auth.internal.dto;
+package com.merchantharmony.engagement.internal.dto;
 
 import java.util.UUID;
 
-public record MerchantProfileResponse(
+public record AuthMerchantProfileResponse(
         UUID merchantId,
         String businessName,
         String displayName,

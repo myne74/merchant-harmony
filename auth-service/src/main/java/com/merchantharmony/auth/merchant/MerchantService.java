@@ -1,5 +1,6 @@
 package com.merchantharmony.auth.merchant;
 
+import com.merchantharmony.auth.config.EngagementServiceClient;
 import com.merchantharmony.auth.merchant.dto.MerchantRegisterRequest;
 import com.merchantharmony.auth.merchant.dto.MerchantRegisterResponse;
 import com.merchantharmony.common.domain.MerchantCategory;
@@ -20,6 +21,7 @@ import java.util.UUID;
 public class MerchantService {
 
     private final MerchantRepository merchantRepository;
+    private final EngagementServiceClient engagementServiceClient;
 
     @Transactional
     public MerchantRegisterResponse register(MerchantRegisterRequest request) {
@@ -60,8 +62,7 @@ public class MerchantService {
 
         log.info("Merchant registered: merchantId={}, category={}", saved.getMerchantId(), category);
 
-        // Phase 3: initialize merchant topics in engagement-service
-        log.warn("TODO Phase 3: initialize topics in engagement-service for merchantId={}", saved.getMerchantId());
+        engagementServiceClient.initializeMerchantTopics(saved.getMerchantId(), category.name());
 
         return new MerchantRegisterResponse(
                 saved.getMerchantId(),
@@ -69,6 +70,13 @@ public class MerchantService {
                 saved.getStatus().name(),
                 saved.getQrCode()
         );
+    }
+
+    @Transactional(readOnly = true)
+    public Merchant getByQrCode(String qrCode) {
+        return merchantRepository.findByQrCode(qrCode)
+                .orElseThrow(() -> new MerchantHarmonyException(ErrorCode.NOT_FOUND,
+                        "No merchant found for this QR code"));
     }
 
     @Transactional(readOnly = true)

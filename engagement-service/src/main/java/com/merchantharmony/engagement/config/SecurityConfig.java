@@ -50,6 +50,11 @@ public class SecurityConfig {
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/actuator/**").permitAll()
+                        .requestMatchers("/api/v1/internal/**").permitAll()
+                        .requestMatchers("/api/v1/merchants/**").hasRole("MERCHANT")
+                        .requestMatchers("/api/v1/customers/**").hasRole("CUSTOMER")
+                        .requestMatchers("/api/v1/feedback/**").hasAnyRole("MERCHANT", "CUSTOMER")
+                        .requestMatchers("/api/v1/feedback-topic-master/**").hasAnyRole("MERCHANT", "CUSTOMER")
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex
