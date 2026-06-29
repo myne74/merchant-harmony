@@ -161,6 +161,33 @@ No manual data entry needed — updated by the AI assistant at the end of each s
 
 ---
 
+### Session 004 (continued) — 2026-06-29
+
+**Phase:** Phase 4 — Notification Service
+**Type:** New microservice + cross-service wiring
+
+**What we did:**
+- Added notification-service as the 4th Maven module (port 8083, no database)
+- SmsProvider interface (extension point for all SMS implementations)
+- LoggingSmsProvider: logs OTP at INFO, 10% simulated failure via SecureRandom, @ConditionalOnProperty(sms.provider=logging)
+- POST /api/v1/notifications/sms endpoint — no JWT, internal trusted network
+- SecurityConfig in notification-service: permitAll (Spring Security is transitive via common)
+- NotificationServiceClient in auth-service (RestClient) — propagates errors as MerchantHarmonyException(INTERNAL_ERROR)
+- OtpService.initiateLogin() signature updated to include phoneNumber; WARN log replaced with notification call
+- auth-service propagates notification failure to OTP login caller (@Transactional rolls back OTP save on error)
+- Bug fix: added scanBasePackages="com.merchantharmony" to all three service main classes so GlobalExceptionHandler from common is correctly discovered by component scanning
+- All 4 modules: BUILD SUCCESS
+
+**Decisions made:**
+- @ConditionalOnProperty on LoggingSmsProvider: future providers wired in by setting sms.provider=twilio (or similar) in config
+- NotificationServiceClient does NOT swallow errors (unlike EngagementServiceClient) — undelivered OTP must surface to caller
+- @Transactional on initiateLogin means OTP save is rolled back if notification fails — no orphaned OTP records
+
+**Discoveries:**
+- GlobalExceptionHandler in common was NOT being picked up by auth-service/engagement-service (package outside their scan path) — fixed with scanBasePackages
+
+---
+
 ## Progress Tracker
 
 | Phase | Status | Session |
@@ -173,3 +200,4 @@ No manual data entry needed — updated by the AI assistant at the end of each s
 | Phase 1 — Flyway + DB schema | Complete | 002 |
 | Phase 2 — Auth service implementation | Complete | 003 |
 | Phase 3 — Engagement service implementation | Complete | 004 |
+| Phase 4 — Notification service | Complete | 004 |

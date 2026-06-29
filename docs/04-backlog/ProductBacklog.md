@@ -118,12 +118,12 @@ Status values: `Pending` · `In Progress` · `Done`
 
 | ID | Item | Endpoint | Status |
 |----|------|----------|--------|
-| P4-001 | notification-service Maven module scaffold (pom, main class, application.properties, test) | — | Pending |
-| P4-002 | `SmsProvider` interface | — | Pending |
-| P4-003 | `LoggingSmsProvider` (log OTP at INFO, 10% simulated failure via SecureRandom) | — | Pending |
-| P4-004 | `POST /api/v1/notifications/sms` internal endpoint (no JWT) | `POST /api/v1/notifications/sms` | Pending |
-| P4-005 | `NotificationServiceClient` in auth-service (RestClient) | — | Pending |
-| P4-006 | Wire OTP send through notification-service in auth-service (replace WARN log in OtpService) | — | Pending |
+| P4-001 | notification-service Maven module scaffold (pom, main class, application.properties, test) | — | Done |
+| P4-002 | `SmsProvider` interface | — | Done |
+| P4-003 | `LoggingSmsProvider` (log OTP at INFO, 10% simulated failure via SecureRandom) | — | Done |
+| P4-004 | `POST /api/v1/notifications/sms` internal endpoint (no JWT) | `POST /api/v1/notifications/sms` | Done |
+| P4-005 | `NotificationServiceClient` in auth-service (RestClient) | — | Done |
+| P4-006 | Wire OTP send through notification-service in auth-service (replace WARN log in OtpService) | — | Done |
 
 ---
 
@@ -134,8 +134,8 @@ Status values: `Pending` · `In Progress` · `Done`
 | Phase 1 — Foundation | 13 | 13 | 0 |
 | Phase 2 — Auth Service | 11 | 10 | 1 (P2-004 deferred to Phase 3) |
 | Phase 3 — Engagement Service | 21 | 21 | 0 |
-| Phase 4 — Notification Service | 6 | 0 | 6 |
-| **Total** | **51** | **44** | **7** |
+| Phase 4 — Notification Service | 6 | 6 | 0 |
+| **Total** | **51** | **51** | **0** |
 
 ---
 

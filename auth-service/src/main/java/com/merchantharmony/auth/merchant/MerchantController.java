@@ -30,7 +30,7 @@ public class MerchantController {
     @PostMapping("/login")
     public LoginResponse login(@Valid @RequestBody LoginRequest request) {
         Merchant merchant = merchantService.getByPhoneNumber(request.phoneNumber());
-        return otpService.initiateLogin(merchant.getMerchantId(), OtpUserType.MERCHANT);
+        return otpService.initiateLogin(merchant.getMerchantId(), OtpUserType.MERCHANT, merchant.getPhoneNumber());
     }
 
     @PostMapping("/verify-otp")

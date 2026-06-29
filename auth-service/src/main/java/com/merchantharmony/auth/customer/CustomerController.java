@@ -30,7 +30,7 @@ public class CustomerController {
     @PostMapping("/login")
     public LoginResponse login(@Valid @RequestBody LoginRequest request) {
         Customer customer = customerService.getByPhoneNumber(request.phoneNumber());
-        return otpService.initiateLogin(customer.getCustomerId(), OtpUserType.CUSTOMER);
+        return otpService.initiateLogin(customer.getCustomerId(), OtpUserType.CUSTOMER, customer.getPhoneNumber());
     }
 
     @PostMapping("/verify-otp")

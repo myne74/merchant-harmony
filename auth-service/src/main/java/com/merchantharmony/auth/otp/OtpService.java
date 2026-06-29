@@ -1,5 +1,6 @@
 package com.merchantharmony.auth.otp;
 
+import com.merchantharmony.auth.config.NotificationServiceClient;
 import com.merchantharmony.auth.otp.dto.LoginResponse;
 import com.merchantharmony.auth.otp.dto.TokenResponse;
 import com.merchantharmony.common.exception.ErrorCode;
@@ -25,9 +26,10 @@ public class OtpService {
 
     private final OtpRequestRepository otpRequestRepository;
     private final JwtService jwtService;
+    private final NotificationServiceClient notificationServiceClient;
 
     @Transactional
-    public LoginResponse initiateLogin(UUID userId, OtpUserType userType) {
+    public LoginResponse initiateLogin(UUID userId, OtpUserType userType, String phoneNumber) {
         String otpCode = String.format("%06d", SECURE_RANDOM.nextInt(1_000_000));
 
         OtpRequest otpRequest = new OtpRequest();
@@ -39,8 +41,8 @@ public class OtpService {
 
         OtpRequest saved = otpRequestRepository.save(otpRequest);
 
-        // MVP: log OTP for testing — SMS gateway integration is a future concern
-        log.warn("[MVP DEV] OTP for {} {} → {}", userType, userId, otpCode);
+        notificationServiceClient.sendSms(phoneNumber,
+                "Your Merchant Harmony OTP is " + otpCode + ". Valid for 5 minutes.");
 
         return new LoginResponse(saved.getOtpRequestId(), "OTP sent successfully");
     }
